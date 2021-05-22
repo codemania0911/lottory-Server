@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Management System Registration</title>
+    {% load static %}
+    <!-- <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <script src="{% static 'js/jquery-3.4.1.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script> -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="{% url 'home' %}">HOME</a>
+            </div>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="{% url 'signup' %}"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+                <li><a href="{% url 'login' %}"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+            </ul>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3"></div>
+            <div class="col-md-6" style="margin: 100px auto;">
+                <h3 style="margin-bottom: 20px; text-align: center">User Registration</h3>
+                <div class="alert alert-success" id="success" style="display: none;">
+                </div>
+                <div class="alert alert-danger" id="danger" style="display: none;">
+                </div>
+                <form action="signup" method="post">
+                    {% csrf_token %}
+                    
+                    <div class="form-group">
+                        <label for="username">User:</label>
+                        <input type="text" name="username" id="username" class="form-control" placeholder="Please enter user name">
+                    </div>
+                    <div class="form-group">
+                        <label for="userpwd">Enter Password:</label>
+                        <input type="password" name="userpwd" id="userpwd" class="form-control" placeholder="please enter password">
+                    </div>
+                    <div class="form-group">
+                        <label for="usercpwd">Confirm Password:</label>
+                        <input type="password" name="usercpwd" id="usercpwd" class="form-control" placeholder="Please enter confirm password">
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div id="my_camera" style="width: 100%;"></div>
+                            </div>
+                            <div class="col-md-6">
+                                <div id="results" style="width: 100%;"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <input type="hidden" name="photo" id="photo" value="">
+                    <div class="form-group">
+                        <div style="margin-top: 10px;">
+                            <button type="submit" class="btn" style="width: 100%; background-color: #70cf97;" name="register_btn" value="ok" onclick="return register_func();">Sign up</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="col-md-3"></div>
+        </div>
+    </div>
+
+    <script>
+
+        function register_func(){
+
+            var username = $("#username").val();
+            if(username == ""){
+                $("#danger").text("Please Enter Name.").show();
+                $("#username").focus();
+                return false;
+            }
+
+            var pwd = $("#userpwd").val();
+            if(pwd == ""){
+                $("#danger").text("Please Enter Password.").show();
+                $("#userpwd").focus();
+                return false;
+            }
+
+            var cpwd = $("#usercpwd").val();
+            if(cpwd == ""){
+                $("#danger").text("Please Enter Confirm Password.").show();
+                $("#usercpwd").focus();
+                return false;
+            }
+
+            return true;
+        }
+    </script>
+</body>
+</html>
