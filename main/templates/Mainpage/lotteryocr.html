@@ -54,54 +54,20 @@
                     url: 'api/lotteryocrApi',
                     data: {"imgString":imgString},
                     dataType: 'json',
-                    success:function(json){
-                        var shtml = '';
-                        var data = json.TextDetections;
+                    success:function(data){
+                        data = JSON.parse(data)
                         if(data){
-                            var categories = [['Category Name', 'Category Alt Name', 'Menu Name', 'Menu Alt Name']];   
-                            var Items = [['Category Name', 'Item Name', 'Short Name', 'Item Alt Name', 'Description', 'Price', 'Unit', 'Taxable', 'Discountable', 'Modifier Groups']];
-                            var categoryName = '';
-                            var newLine = true;
-                            for(var i = 0; i < data.length; i ++){
-                                shtml += '<tr>';
-                                shtml += '<td>'+data[i].DetectedText+'</td>';
-                                shtml += '<td>'+data[i].Type+'</td>';
-                                shtml += '<td>'+data[i].Id+'</td>';
-                                shtml += '<td>'+data[i].parent_id+'</td>';
-                                shtml += '<td>'+data[i].Geometry+'</td>';
-                                shtml += '</tr>';
-                                rowData.push(data[i]);
-                                if(data[i].Type == "category"){
-                                    console.log(data[i].DetectedText);
-                                    categoryName = data[i].DetectedText;
-                                    categories.push([categoryName, '', '', '', '']);
-                                    newLine = true;
-                                }else if(data[i].Type == "Menu_items"){
-                                    var lastIndex = Items.length - 1;
-                                    if(data[i].DetectedText == "") data[i].DetectedText = "  ";
-                                    if(newLine) Items.push([categoryName, data[i].DetectedText, '', '', '', '', '', '', '', '']);
-                                    else Items[lastIndex][1] += "," + data[i].DetectedText;
-                                    newLine = false;
-                                }else if(data[i].Type == "price"){
-                                    Items[Items.length - 1][5] = data[i].DetectedText;
-                                    newLine = true;
-                                }
-                            }
-                            $('#tbody').html(shtml);
-                            wb = XLSX.utils.book_new();
-                            wb.Props = {
-                                Title: "FoodOCR",
-                                Subject: "Test",
-                                Author: "Red Stapler",
-                                CreatedDate: new Date()
-                            };
-                            wb.SheetNames.push("Category");
-                            wb.SheetNames.push("Items");
-                            var category_ws = XLSX.utils.aoa_to_sheet(categories);
-                            var item_ws = XLSX.utils.aoa_to_sheet(Items);
-                            wb.Sheets["Category"] = category_ws;
-                            wb.Sheets["Items"] = item_ws;
-
+                            var company = data.company
+                            var number = data.number
+                            var date = data.date
+                            $('#company').html(company)
+                            $('#number').html('')
+                            number.forEach(row => {
+                                $('#number').append(`
+                                    <p>${row}</p>
+                                `)
+                            });
+                            $('#date').html(date)
                         }else{
                             alert(data.error);
                             console.log(data.error);
@@ -228,23 +194,23 @@
                     <div class="col-md-6" style="padding: 10px 10px;">
                         <button class="btn" onclick="postImg();" style="width: 60%; background-color: #70cf97; height: 44px; font-size: 16px;">Lottery OCR</button>
                         <div style="margin: 20px 40px; height: 700px; overflow: auto">
-                            <table class="table table-striped" style="margin-bottom: 0px;">
-                                <thead>
-                                    <tr>                                       
-                                        <td>Detected Text</td>
-                                        <td>Type</td>
-                                        <td>Id</td>
-                                        <td>parent_id</td>
-                                        <td>Geometry</td>
-                                    </tr>
-                                </thead>
-                                <tbody id="tbody"></tbody>
-                            </table>
+                            <div>
+                                <p style="text-align: left; font-size: 20px;">company</p>
+                                <div style="min-height: 30px; text-align: center;" id="company"></div>
+                            </div>
+                            <div>
+                                <p style="text-align: left; font-size: 20px;">number</p>
+                                <div style="min-height: 30px; text-align: center;" id="number"></div>
+                            </div>
+                            <div>
+                                <p style="text-align: left; font-size: 20px;">date</p>
+                                <div style="min-height: 30px; text-align: center;" id="date"></div>
+                            </div>
                         </div>
-                        <button class="btn" type="button" onclick="downloadCSV()" style="width: 60%; background-color: #70cf97; height: 44px; font-size: 16px;">
+                        <!-- <button class="btn" type="button" onclick="downloadCSV()" style="width: 60%; background-color: #70cf97; height: 44px; font-size: 16px;">
                             <img src="{% static 'images/download.png' %}" width="30" height="30" style="margin-right: 10px" />
                             Download CSV
-                        </button>                        
+                        </button>                         -->
                     </div>
                 </div>
             </div>

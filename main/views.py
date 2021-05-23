@@ -62,61 +62,16 @@ def lotteryocr(request):
 
 @csrf_exempt
 def lotteryocrApi(request):
-    print('--------------start')
     data = request.POST["imgString"]
     imgString = data.encode().split(b';base64,')[-1]
-    # img = base64_to_PIL(imgString)
-    # img = np.array(img)
+    img = base64_to_PIL(imgString)
+    img = np.array(img)
         
-    img = mpimg.imread('./Capture.jpg')
     outpath = "./output_images"
-
-    print('----------------get part')
     get_image_parts(img, outpath)
-    print('-------------====get part success')
     all_img_details = create_json()
-    print(all_img_details)
-
-        # img = np.array(img)
-        # H,W = img.shape[:2]
-
-        # category_of_items = []
-        # all_img_details = {}
-        # content_list =[]
-        # outpath = ROOT_DIR + "/cropped/"
-        # image_path = ROOT_DIR +'/Capture.JPG'
-        # textfile_name = image_path.split(".")[0]
-        # textfile_name = textfile_name.split("/")[-1] +".json"
-        
-        # get_image_parts(img,outpath  )
-        # c_id = 0
-        # cropped_images = glob(outpath +"*.png")
-        # if len(cropped_images)==1:
-        #     menu_text = tr.run(image_path)
-        #     to_dump = getting_menu_details(menu_text, c_id)
-        #     content_list.extend(to_dump)
-        # else:
-        #     for img in cropped_images: #reading all cropped images of detection    
-        #             menu_text = tr.run(img)
-        #             c_id +=1
-        #             to_dump = getting_menu_details(menu_text, c_id)
-        #             content_list.extend(to_dump)
-
-        # all_img_details['TextDetections'] = content_list
-        # remove_string = "rm " + outpath +"*"
-        # os.system(remove_string)
-        # with open(textfile_name, "w", encoding='utf-8') as f:
-        #     try:
-        #         f.write(json.dumps(all_img_details, ensure_ascii=False))
-        #     except:
-        #         f.write(str(all_img_details))
-        # print("\n\n",all_img_details )
-        # print("Wrote into " , textfile_name)
-        # end_time = time.time()
-        # Time_estimate = end_time - start_time
-        # print("\n Processing time:", Time_estimate)    
            
-    return JsonResponse(all_img_details)
+    return JsonResponse(all_img_details, safe=False)
 
 def signup_create(request):
     if request.method=="POST":
