@@ -57,10 +57,17 @@ def get_image_parts(image,  outpath = "./output_images"):
         cropped = image[y1: y2, x1: x2]
         images_cropped.append(cropped)
 
-    class_ids_tolist = list(class_ids)   
-    for images, class_lst in  zip(images_cropped, class_ids_tolist):   
-        cv2.imwrite(path.join(outpath,"dataname_{0}.jpg".format(class_lst)), images)
+    class_ids_tolist = list(class_ids)
+    part_images = []
+    temp_image_obj = {}
+    for image, class_lst in  zip(images_cropped, class_ids_tolist):
+        temp_image_obj['image'] = image
+        temp_image_obj['class'] = class_lst
+        part_images.append(temp_image_obj)
+        cv2.imwrite(path.join(outpath,"dataname_{0}.jpg".format(class_lst)), image)
         print("Saving ", outpath,"dataname_{0}.jpg".format(class_lst))
+
+    return part_images
     
     
 
