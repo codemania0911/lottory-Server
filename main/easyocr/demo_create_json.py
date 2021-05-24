@@ -128,20 +128,20 @@ def create_json():
     number_result = []
     
     for img in glob.glob("./output_images/*.jpg"):
-       split_text=os.path.splitext(img)
-       file_name = os.path.splitext(img)[0]
-       if '1' in file_name:
-          reader = easyocr.Reader(['es', 'en'], gpu=True)
-          company_result= reader.readtext(img, detail=0, paragraph=True)
-          company_lst.append(company_result)
-       if '2' in file_name:
-            result = inference_detector(model, img)
-            number_result =print_line(result,printline = True,thr = 0.5)
-       if '3' in file_name:
-          #reader = easyocr.Reader(['es', 'en'], gpu=True)
-          date_result = reader.readtext(img, detail=0, paragraph=True)
-          date_lst.append(date_result)
-          print(date_lst)
+        split_text=os.path.splitext(img)
+        file_name = os.path.splitext(img)[0]
+        reader = easyocr.Reader(['es', 'en'], gpu=False)
+        if '1' in file_name:
+            company_result= reader.readtext(img, detail=0, paragraph=True)
+            company_lst.append(company_result)
+        if '2' in file_name:
+                result = inference_detector(model, img)
+                number_result =print_line(result,printline = True,thr = 0.5)
+        if '3' in file_name:
+            #reader = easyocr.Reader(['es', 'en'], gpu=True)
+            date_result = reader.readtext(img, detail=0, paragraph=True)
+            date_lst.append(date_result)
+            print(date_lst)
     
     length = len(number_result)
     d = {}
