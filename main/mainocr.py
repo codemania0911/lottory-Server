@@ -68,6 +68,3 @@ def get_image_parts(image,  outpath = "./output_images"):
         print("Saving ", outpath,"dataname_{0}.jpg".format(class_lst))
 
     return part_images
-    
-    
-

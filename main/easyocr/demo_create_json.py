@@ -62,7 +62,7 @@ def non_max_suppression_fast(flat_x, overlapThresh):
     return final
     
 # x = result[2]
-def print_line(r,printline,thr):
+def print_line(r,thr):
     '''
     x is the result of one image
     '''
@@ -96,30 +96,40 @@ def print_line(r,printline,thr):
         return el[0]
 
     flat_x.sort(key=_sort_ymin)
-    MEAN_H = np.mean([x[3] - x[1] for x in flat_x])
+    # MEAN_H = np.mean([x[3] - x[1] for x in flat_x])
 
-    line = {0:[flat_x[0]]}
-    c = 0
-    for i in range(1,len(flat_x)):
-        if flat_x[i][1] - flat_x[i-1][1] < MEAN_H/2:
-            line[c].append(flat_x[i])
-        else:
-            c+= 1
-            line[c] = [flat_x[i]]
-    for i in list(line.keys()):
-        line[i].sort(key=_sort_xmin)
+    # line = {0:[flat_x[0]]}
+    # c = 0
+    # for i in range(1,len(flat_x)):
+    #     if flat_x[i][1] - flat_x[i-1][1] < MEAN_H/2:
+    #         line[c].append(flat_x[i])
+    #     else:
+    #         c+= 1
+    #         line[c] = [flat_x[i]]
+    # for i in list(line.keys()):
+    #     line[i].sort(key=_sort_xmin)
 
+    # final = []
+    # for i in list(line.keys()):
+    #     final.append([str(int(x[-1])) for x in line[i]])
+    # _a = []
+    # for f in final:
+    #     a = ''.join(f)
+    #     a = re.findall(r'\d{2}',a)
+    #     _a.append(a)
+    #     if printline:
+    #         print(a)
+    # return _a
     final = []
-    for i in list(line.keys()):
-        final.append([str(int(x[-1])) for x in line[i]])
-    _a = []
-    for f in final:
-        a = ''.join(f)
+    n_row = len(flat_x) // 12
+    for c in range(0,n_row):
+        temp = flat_x[c*12:(c+1)*12]
+        temp.sort(key=_sort_xmin)
+        temp = [str(int(t[-1])) for t in temp]
+        a = ''.join(temp)
         a = re.findall(r'\d{2}',a)
-        _a.append(a)
-        if printline:
-            print(a)
-    return _a
+        final.append(a)
+    return final
 
 reader = easyocr.Reader(['es', 'en'], gpu=True)
 
@@ -138,7 +148,7 @@ def get_text(part_imgs):
             company_lst.append(company_result)
         if '2' in file_name:
             result = inference_detector(model, img)
-            number_result =print_line(result,printline = True,thr = 0.5)
+            number_result =print_line(result,thr = 0.5)
         if '3' in file_name:
             #reader = easyocr.Reader(['es', 'en'], gpu=True)
             date_result = reader.readtext(img, detail=0, paragraph=True)

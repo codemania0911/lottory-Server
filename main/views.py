@@ -82,9 +82,8 @@ def lotteryocrApi(request):
 def lotteryocrnumberApi(request):
     data = request.POST["imgString"]
     imgString = data.encode().split(b';base64,')[-1]
-    img = base64_to_PIL(imgString)
-    img = np.array(img)
-    number_text = get_number_text(img)
+    cvimg = readb64(imgString)       
+    number_text = get_number_text(cvimg)
            
     return JsonResponse(number_text, safe=False)
 
