@@ -71,15 +71,22 @@ def readb64(base64_string):
 def lotteryocrApi(request):
     data = request.POST["imgString"]
     imgString = data.encode().split(b';base64,')[-1]
-    cvimg = readb64(imgString)
-#     img = base64_to_PIL(imgString)
-#     img = np.array(img)
-        
+    cvimg = readb64(imgString)        
     outpath = "./output_images"
     get_image_parts(cvimg, outpath)
-    all_img_details = create_json()
+    all_img_details = get_text()
            
     return JsonResponse(all_img_details, safe=False)
+
+@csrf_exempt
+def lotteryocrnumberApi(request):
+    data = request.POST["imgString"]
+    imgString = data.encode().split(b';base64,')[-1]
+    img = base64_to_PIL(imgString)
+    img = np.array(img)
+    number_text = get_number_text(img)
+           
+    return JsonResponse(number_text, safe=False)
 
 def signup_create(request):
     if request.method=="POST":

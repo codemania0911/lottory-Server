@@ -121,7 +121,9 @@ def print_line(r,printline,thr):
             print(a)
     return _a
 
-def create_json():
+reader = easyocr.Reader(['es', 'en'], gpu=True)
+
+def get_text(part_imgs):
     
     company_lst = []
     date_lst = []
@@ -135,8 +137,8 @@ def create_json():
             company_result= reader.readtext(img, detail=0, paragraph=True)
             company_lst.append(company_result)
         if '2' in file_name:
-                result = inference_detector(model, img)
-                number_result =print_line(result,printline = True,thr = 0.5)
+            result = inference_detector(model, img)
+            number_result =print_line(result,printline = True,thr = 0.5)
         if '3' in file_name:
             #reader = easyocr.Reader(['es', 'en'], gpu=True)
             date_result = reader.readtext(img, detail=0, paragraph=True)
@@ -150,20 +152,24 @@ def create_json():
     for i in range(length):
         d = {}
         if i < len(number_result):
-          d["number"] = number_result[i]
+            d["number"] = number_result[i]
         else:
-          d["number"] = " "
+            d["number"] = " "
         lst_temp.append(d)
     #print(lst_temp)
     index = {'company': company_lst,
-                          'number': number_result,
-                          'date': date_lst,
+                            'number': number_result,
+                            'date': date_lst,
                             }
     all_details_json = json.dumps(index)
     print(all_details_json)
     
     textfile_name = "lottery_json"
     return all_details_json
+
+def get_number_text(number_part_img):
+    number_text = reader.readtext(number_part_img, detail=0, paragraph=True)
+    return number_text
 
 # with open(textfile_name+".json", "w") as f:
 #   try:
