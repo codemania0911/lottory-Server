@@ -8,4 +8,6 @@ urlpatterns = [
 
     path('lotteryocr', views.lotteryocr, name='lotteryocr'),
     path('api/lotteryocrApi', views.lotteryocrApi, name='lotteryocrApi'),
+    path('api/lotteryocrnumberApi', views.lotteryocrnumberApi, name='lotteryocrnumberApi'),
+    
 ]

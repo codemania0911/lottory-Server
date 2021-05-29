@@ -12,9 +12,9 @@ from os import path
 # Import Mask RCNN
 # Root directory of the project
 # ROOT_DIR = os.path.abspath("Mask_RCNN")
-ROOT_DIR = os.getcwd() 
+ROOT_DIR = "/home/ubuntu/lotto" 
 sys.path.append(ROOT_DIR)  # To find local version of the library
-WEIGHT_DIR = os.getcwd() + "/main/mrcnn/weights/"
+WEIGHT_DIR = ROOT_DIR + "/main/mrcnn/weights/"
 Weight_PATH = WEIGHT_DIR + "lottery_model.h5"
 DEVICE = "/cpu:0"  # /cpu:0 or /gpu:0 
 MODEL_DIR = os.path.join(ROOT_DIR, "logs")
@@ -43,7 +43,7 @@ with tf.device(DEVICE):
     model.keras_model._make_predict_function()
 
 
-def get_image_parts(image,  outpath = "./output_images"):
+def get_image_parts(image,  outpath = "/home/ubuntu/lotto/output_images"):
     if not os.path.exists(outpath):
         os.mkdir(outpath)
     results1 = model.detect([image], verbose=1)

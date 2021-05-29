@@ -80,12 +80,14 @@ def lotteryocrApi(request):
 
 @csrf_exempt
 def lotteryocrnumberApi(request):
-    data = request.POST["imgString"]
-    imgString = data.encode().split(b';base64,')[-1]
-    cvimg = readb64(imgString)       
-    number_text = get_number_text(cvimg)
-           
-    return JsonResponse(number_text, safe=False)
+    try:
+        data = request.POST["imgString"]
+        imgString = data.encode().split(b';base64,')[-1]
+        cvimg = readb64(imgString)       
+        number_text = get_number_text(cvimg)
+        return JsonResponse({"data":number_text}, safe=False)
+    except Exception as error:
+        return Response({"data": str(error)})
 
 def signup_create(request):
     if request.method=="POST":

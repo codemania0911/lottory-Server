@@ -1,6 +1,6 @@
 import json
 import os
-    
+import cv2    
 import mmcv
 from main.easyocr.mmdet.apis import (inference_detector,
                         init_detector, show_result_pyplot)
@@ -12,10 +12,10 @@ import numpy as np
 import easyocr
 
 # The file path of config file ocr.py and latest.pth
-config_file = "./main/easyocr/weights/ocr.py"
-checkpoint_file = './main/easyocr/weights/latest.pth'
+config_file = "/home/ubuntu/lotto/main/easyocr/weights/ocr.py"
+checkpoint_file = '/home/ubuntu/lotto/main/easyocr/weights/latest.pth'
 model = init_detector(config_file, checkpoint_file, device='cpu')
-imgs = glob.glob(r'./output_images/*.jpg')
+imgs = glob.glob(r'/home/ubuntu/lotto/output_images/*.jpg')
 
 
 def non_max_suppression_fast(flat_x, overlapThresh):
@@ -131,15 +131,14 @@ def print_line(r,thr):
         final.append(a)
     return final
 
-reader = easyocr.Reader(['es', 'en'], gpu=True)
 
-def get_text(part_imgs):
+def get_text():
     
     company_lst = []
     date_lst = []
     number_result = []
-    
-    for img in glob.glob("./output_images/*.jpg"):
+   
+    for img in glob.glob("/home/ubuntu/lotto/output_images/*.jpg"):
         split_text=os.path.splitext(img)
         file_name = os.path.splitext(img)[0]
         reader = easyocr.Reader(['es', 'en'], gpu=False)
@@ -147,7 +146,8 @@ def get_text(part_imgs):
             company_result= reader.readtext(img, detail=0, paragraph=True)
             company_lst.append(company_result)
         if '2' in file_name:
-            result = inference_detector(model, img)
+            cvimg = cv2.imread(img)
+            result = inference_detector(model, cvimg)
             number_result =print_line(result,thr = 0.5)
         if '3' in file_name:
             #reader = easyocr.Reader(['es', 'en'], gpu=True)
@@ -178,8 +178,9 @@ def get_text(part_imgs):
     return all_details_json
 
 def get_number_text(number_part_img):
-    number_text = reader.readtext(number_part_img, detail=0, paragraph=True)
-    return number_text
+    result = inference_detector(model, number_part_img)
+    number_result =print_line(result,thr = 0.5)
+    return number_result
 
 # with open(textfile_name+".json", "w") as f:
 #   try:
