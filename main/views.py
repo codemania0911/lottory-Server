@@ -79,16 +79,69 @@ def lotteryocrApi(request):
     return JsonResponse(all_img_details, safe=False)
 
 @csrf_exempt
-def lotteryocrnumberApi(request):
+def lotteryocrpartsApi(request):
+    try:
+        type_text = ''
+        number_text = ''
+        date_text = ''
+        numberImage = request.POST["numberImage"]
+        numberImageStr = numberImage.encode().split(b';base64,')[-1]
+        numbercvimg = readb64(numberImageStr)       
+        number_text = get_number_text(numbercvimg)
+        
+        if request.POST.get("typeImage") or request.POST.get("dateImage"):
+            reader = easyocr.Reader(['es', 'en'], gpu=False)
+        
+        
+        if request.POST.get("typeImage"):
+            typeImage = request.POST["typeImage"]
+            typeImageStr = typeImage.encode().split(b';base64,')[-1]
+            typecvimg = readb64(typeImageStr)   
+            type_text = reader.readtext(typecvimg, detail=0, paragraph=True)
+        if request.POST.get("dateImage"):
+            dateImage = request.POST["dateImage"]
+            dateImageStr = dateImage.encode().split(b';base64,')[-1]
+            datecvimg = readb64(dateImageStr) 
+            date_text = reader.readtext(datecvimg, detail=0, paragraph=True)
+        result_data = {"type_text":type_text,"number_text":number_text,"date_text":date_text}
+        return JsonResponse({"data":result_data}, safe=False)
+    except Exception as error:
+        return JsonResponse({"data": str(error)})
+
+@csrf_exempt
+def lotteryocrtypeApi(request):
     try:
         data = request.POST["imgString"]
         imgString = data.encode().split(b';base64,')[-1]
         cvimg = readb64(imgString)       
-        number_text = get_number_text(cvimg)
-        return JsonResponse({"data":number_text}, safe=False)
+        type_text = get_type_text(cvimg)
+        return JsonResponse({"data":type_text}, safe=False)
     except Exception as error:
         return Response({"data": str(error)})
 
+@csrf_exempt
+def lotteryocrnumberApi(request):
+    try:
+        data = request.POST["imgString"]
+        imgString = data.encode().split(b';base64,')[-1]
+        cvimg = readb64(imgString)  
+#         cv2.imwrite("./output_images/test.jpg", cvimg)
+        number_text = get_number_text(cvimg)
+        return JsonResponse({"data":number_text}, safe=False)
+    except Exception as error:
+        return JsonResponse({"data": str(error)})
+
+@csrf_exempt
+def lotteryocrdateApi(request):
+    try:
+        data = request.POST["imgString"]
+        imgString = data.encode().split(b';base64,')[-1]
+        cvimg = readb64(imgString)       
+        date_text = get_date_text(cvimg)
+        return JsonResponse({"data":date_text}, safe=False)
+    except Exception as error:
+        return JsonResponse({"data": str(error)})
+    
 def signup_create(request):
     if request.method=="POST":
         form=UserInfoCreateForm(request.POST)

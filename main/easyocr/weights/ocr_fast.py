@@ -41,8 +41,8 @@ data = dict(
     train=dict(
         type='CocoDataset',
         ann_file=
-        '/content/annotations/new_ocr_train.json',
-        img_prefix='/content/images/train',
+        '/content/drive/MyDrive/Colab Notebooks/OCR/annotation/ocr_train.json',
+        img_prefix='/content/drive/MyDrive/Colab Notebooks/OCR/images/train/',
         pipeline=[
             dict(type='LoadImageFromFile'),
             dict(type='LoadAnnotations', with_bbox=True),
@@ -61,8 +61,8 @@ data = dict(
     val=dict(
         type='CocoDataset',
         ann_file=
-        '/content/annotations/new_ocr_val.json',
-        img_prefix='/content/images/val',
+        '/content/drive/MyDrive/Colab Notebooks/OCR/annotation/ocr_val.json',
+        img_prefix='/content/drive/MyDrive/Colab Notebooks/OCR/images/val/',
         pipeline=[
             dict(type='LoadImageFromFile'),
             dict(
@@ -86,8 +86,8 @@ data = dict(
     test=dict(
         type='CocoDataset',
         ann_file=
-        '/content/annotations/new_ocr_val.json',
-        img_prefix='/content/images/val',
+        '/content/drive/MyDrive/Colab Notebooks/OCR/annotation/ocr_val.json',
+        img_prefix='/content/drive/MyDrive/Colab Notebooks/OCR/images/val/',
         pipeline=[
             dict(type='LoadImageFromFile'),
             dict(
@@ -121,16 +121,14 @@ lr_config = dict(
     warmup='linear',
     warmup_iters=1000,
     warmup_ratio=0.001,
-    step=[10, 20, 30, 40])
-total_epochs = 50
+    step=[30, 40])
 runner = dict(type='EpochBasedRunner', max_epochs=50)
 checkpoint_config = dict(interval=10)
-log_config = dict(interval=10, hooks=[dict(type='TextLoggerHook')])
+log_config = dict(interval=50, hooks=[dict(type='TextLoggerHook')])
 custom_hooks = [dict(type='NumClassCheckHook')]
 dist_params = dict(backend='nccl')
 log_level = 'INFO'
-load_from = '/content/latest.pth'
-# load_from = None
+load_from = None
 resume_from = None
 workflow = [('train', 1)]
 model = dict(
@@ -168,9 +166,9 @@ model = dict(
         nms_pre=1000,
         min_bbox_size=0,
         score_thr=0.05,
-        nms=dict(type='nms', iou_threshold=0.3),
+        nms=dict(type='nms', iou_threshold=0.6),
         max_per_img=100))
-
+total_epochs = 50
 classes = ('0', '1', '2', '3', '4', '5', '6', '7', '8', '9')
 work_dir = './work_dirs/ocr'
 gpu_ids = range(0, 1)

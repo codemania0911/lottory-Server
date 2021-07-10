@@ -5,6 +5,7 @@ temp/
 test/
 main/mrcnn/weights/lottery_fiverr.h5
 main/easyocr/weights/latest.pth
+main/easyocr/weights/latest_fast.pth
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
