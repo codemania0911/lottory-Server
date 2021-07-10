@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     # import
     'rest_framework',
     'main', 
+    'signatureVerify',
 ]
 
 MIDDLEWARE = [
